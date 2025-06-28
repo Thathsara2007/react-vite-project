@@ -1,66 +1,15 @@
-/*import type {CartItem} from "../../../model/CartItem.ts";
+import {useSelector} from "react-redux";
+import type {RootStore} from "../../../store/store.ts";
 
-interface ShoppingCartProps {
-    itemsList: CartItem[];
-}
-
-export function ShoppingCart({itemsList} : ShoppingCartProps) {
-    return (
-        <div className="flrx justify-center items-center px-4">
-            <div className='w-full max-w-screen-xl border border-purple-200'>
-                <table className='min-w-full border-collapse'>
-                    <thead>
-                    <tr className='bg-blue-700 text-white '>
-                        <th className='text-xs border-blue-600 border p-2'>Id</th>
-                        <th className='text-xs border-blue-600 border p-2'>Name</th>
-                        <th className='text-xs border-blue-600 border p-2'>Unit Price</th>
-                        <th className='text-xs border-blue-600 border p-2'>Quantity</th>
-                        <th className='text-xs border-blue-600 border p-2'>Total Price</th>
-                    </tr>
-                    </thead>
-
-                    <tbody>
-                    {
-                        itemsList.length ===0 ? (
-                            <tr>
-                                <td colSpan={5} className='border-blue-300 border p-2 bg-purple-100'>
-                                    <p className='text-center text-sm text-blue'>No items to display!</p>
-                                </td>
-                            </tr>
-                        ) : (
-                            itemsList.map((item, index) => (
-                                <tr key={item.product.id} className={`${index % 2 === 0 ? "bg-blue-100" : "bg-green-200"}
-                                hover: bg-blue-300 border border-blue-300`}>
-                                    <td>{item.product.id}</td>
-                                    <td>{item.product.name}</td>
-                                    <td> {item.product.currency} {item.product.price}</td>
-                                    <td>{item.itemCount}</td>
-                                    <td>{item.product.currency} {item.product.price * item.itemCount}</td>
-                                </tr>
-                            ))
-                        )
-                    }
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    );
-}*/
-
-
-import type { CartItem } from "../../../model/CartItem.ts";
-
-interface ShoppingCartProps {
-    itemsList: CartItem[];
-}
-
-export function ShoppingCart({ itemsList }: ShoppingCartProps) {
+export function ShoppingCart() {
     const calculateTotal = () => {
-        return itemsList.reduce(
+        return items.reduce(
             (sum, item) => sum + (Number(item.product.price) * item.itemCount),
             0
         );
     };
+
+    const {items} = useSelector((state: RootStore) => state.cart);
 
     return (
         <div className="container mx-auto px-4 py-8">
@@ -68,11 +17,11 @@ export function ShoppingCart({ itemsList }: ShoppingCartProps) {
                 <div className="p-6 border-b border-gray-200">
                     <h2 className="text-2xl font-semibold text-gray-800">Your Shopping Cart</h2>
                     <p className="text-gray-600">
-                        {itemsList.length} {itemsList.length === 1 ? 'item' : 'items'} in your cart
+                        {items.length} {items.length === 1 ? 'item' : 'items'} in your cart
                     </p>
                 </div>
 
-                {itemsList.length === 0 ? (
+                {items.length === 0 ? (
                     <div className="p-8 text-center">
                         <div className="mx-auto w-24 h-24 text-gray-400 mb-4">
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -108,7 +57,7 @@ export function ShoppingCart({ itemsList }: ShoppingCartProps) {
                             </tr>
                             </thead>
                             <tbody className="bg-white divide-y divide-gray-200">
-                            {itemsList.map((item) => (
+                            {items.map((item) => (
                                 <tr key={item.product.id} className="hover:bg-gray-50 transition-colors">
                                     <td className="px-6 py-4 whitespace-nowrap">
                                         <div className="flex items-center">
@@ -146,14 +95,14 @@ export function ShoppingCart({ itemsList }: ShoppingCartProps) {
                     </div>
                 )}
 
-                {itemsList.length > 0 && (
+                {items.length > 0 && (
                     <div className="bg-gray-50 px-6 py-4 border-t border-gray-200">
                         <div className="flex justify-between items-center">
                             <div className="text-sm text-gray-600">
-                                Subtotal: <span className="font-medium">{itemsList.length} {itemsList.length === 1 ? 'item' : 'items'}</span>
+                                Subtotal: <span className="font-medium">{items.length} {items.length === 1 ? 'item' : 'items'}</span>
                             </div>
                             <div className="text-xl font-semibold text-gray-900">
-                                Total: {itemsList[0]?.product.currency} {calculateTotal().toFixed(2)}
+                                Total: {items[0]?.product.currency} {calculateTotal().toFixed(2)}
                             </div>
                         </div>
                         <div className="mt-6 flex justify-end">

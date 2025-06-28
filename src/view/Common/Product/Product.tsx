@@ -1,9 +1,8 @@
-// import laptop from "../../../assets/products/ASUS.jpg";
-import {useState} from "react";
+
 import {ModifyCart} from "../ModifyCart/ModifyCart.tsx";
 import type {ProductData} from "../../../model/ProductData.ts";
-import {useDispatch} from "react-redux";
-import type {AppDispatch} from "../../../store/store.ts";
+import {useDispatch, useSelector} from "react-redux";
+import type {AppDispatch, RootStore} from "../../../store/store.ts";
 import {addItemTOCart} from "../../../slices/cartSlice.ts";
 
 type ProductProps = {
@@ -19,10 +18,14 @@ export function Product({data}: ProductProps) {
 
     const dispatch = useDispatch<AppDispatch>();
 
-    const [isActive, setIsActive] = useState(false);
+   const item = useSelector((state : RootStore) => state.cart.items.find(
+        cartItem => cartItem.product.id === data.id
+    ));
+
+    // const [isActive, setIsActive] = useState(false);
     const addToCart = () => {
         dispatch(addItemTOCart(data));
-        setIsActive(true);
+        // setIsActive(true);
     }
 
     return (
@@ -40,7 +43,7 @@ export function Product({data}: ProductProps) {
 
 
             {
-                isActive ? (<ModifyCart data={{product: data}}/>) : (
+                item ? (<ModifyCart data={{product: data}}/>) : (
                     <button onClick={addToCart} className="mt-auto w-full py-2 px-4 bg-purple-600 hover:bg-purple-700 text-white rounded-md transition-colors flex items-center justify-center">
                         Add To Cart
                     </button>
